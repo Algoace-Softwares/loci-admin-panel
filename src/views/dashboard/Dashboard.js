@@ -4,6 +4,10 @@ import { CSVLink } from 'react-csv'
 import {
   CCardBody,
   CCol,
+  CDropdown,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle,
   CRow,
   CTable,
   CTableBody,
@@ -12,6 +16,8 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilOptions } from '@coreui/icons'
 
 const Dashboard = () => {
   const example = [
@@ -307,6 +313,7 @@ const Dashboard = () => {
                 <CTableHeaderCell className="bg-body-tertiary">No. of reports</CTableHeaderCell>
                 <CTableHeaderCell className="bg-body-tertiary ">Reasons</CTableHeaderCell>
                 <CTableHeaderCell className="bg-body-tertiary">Link</CTableHeaderCell>
+                <CTableHeaderCell className="bg-body-tertiary">Action</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
@@ -330,6 +337,20 @@ const Dashboard = () => {
                       <a href={item.link} target="_blank" rel="noopener noreferrer">
                         click here
                       </a>
+                    </div>
+                  </CTableDataCell>
+                  <CTableDataCell className="text-center">
+                    <div className="d-flex justify-content-between text-nowrap">
+                      <CDropdown alignment="end">
+                        <CDropdownToggle caret={false} className="text-black border-3 rounded p-0">
+                          <CIcon style={{ color: 'black' }} icon={cilOptions} />
+                        </CDropdownToggle>
+                        <CDropdownMenu>
+                          <CDropdownItem onClick={() => console.log('1')}>Removed</CDropdownItem>
+                          <CDropdownItem onClick={() => console.log('2')}>Warned</CDropdownItem>
+                          <CDropdownItem onClick={() => console.log('3')}>Banned</CDropdownItem>
+                        </CDropdownMenu>
+                      </CDropdown>
                     </div>
                   </CTableDataCell>
                 </CTableRow>
