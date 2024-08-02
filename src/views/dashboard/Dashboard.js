@@ -346,9 +346,10 @@ const Dashboard = () => {
                           <CIcon style={{ color: 'black' }} icon={cilOptions} />
                         </CDropdownToggle>
                         <CDropdownMenu>
-                          <CDropdownItem onClick={() => console.log('1')}>Removed</CDropdownItem>
-                          <CDropdownItem onClick={() => console.log('2')}>Warned</CDropdownItem>
-                          <CDropdownItem onClick={() => console.log('3')}>Banned</CDropdownItem>
+                          <CDropdownItem onClick={() => console.log('1')}>Remove</CDropdownItem>
+                          <CDropdownItem onClick={() => console.log('2')}>Warn</CDropdownItem>
+                          <CDropdownItem onClick={() => console.log('3')}>Ban</CDropdownItem>
+                          <CDropdownItem onClick={() => console.log('3')}>Deactivate</CDropdownItem>
                         </CDropdownMenu>
                       </CDropdown>
                     </div>
