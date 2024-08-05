@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { CSVLink } from 'react-csv'
 
 import {
@@ -8,6 +8,7 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
+  CFormInput,
   CRow,
   CTable,
   CTableBody,
@@ -20,6 +21,8 @@ import CIcon from '@coreui/icons-react'
 import { cilOptions } from '@coreui/icons'
 
 const Dashboard = () => {
+  const [searchText, setSearchText] = useState('')
+
   const example = [
     {
       creator: 'user1',
@@ -300,11 +303,19 @@ const Dashboard = () => {
     { label: 'Reasons', key: 'reasons' },
     { label: 'Link', key: 'link' },
   ]
-
+  console.log('searchText', searchText)
   return (
     <CRow>
       <CCol xs>
         <CCardBody>
+          <div className="py-4">
+            <CFormInput
+              type="text"
+              placeholder="Search report"
+              aria-label="default input example"
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </div>
           <CTable align="middle" className="mb-0 border" hover responsive>
             <CTableHead className="text-nowrap">
               <CTableRow>
