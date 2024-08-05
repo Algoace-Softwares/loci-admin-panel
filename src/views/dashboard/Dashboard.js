@@ -377,7 +377,7 @@ const Dashboard = () => {
             <CSVLink
               filename={`reports-${formattedDate}.csv`}
               style={{
-                backgroundColor: '#AE13FE',
+                backgroundColor: '#35B7F6',
                 color: 'white',
                 padding: '10px 20px',
                 border: 'none',
