@@ -1,30 +1,22 @@
 import React from 'react'
 import {
   CAvatar,
-  CBadge,
   CDropdown,
-  CDropdownDivider,
   CDropdownHeader,
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
 } from '@coreui/react'
-import {
-  // cilBell,
-  cilCreditCard,
-  // cilCommentSquare,
-  // cilEnvelopeOpen,
-  cilFile,
-  cilLockLocked,
-  cilSettings,
-  cilTask,
-  cilUser,
-} from '@coreui/icons'
+import { cilLockLocked, cilUser } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
+import { signOut } from 'aws-amplify/auth'
+import { useNavigate } from 'react-router-dom'
 
 const AppHeaderDropdown = () => {
+  const navigate = useNavigate()
+
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
@@ -36,11 +28,24 @@ const AppHeaderDropdown = () => {
           <CIcon icon={cilUser} className="me-2" />
           Profile
         </CDropdownItem>
-        <CDropdownDivider />
-        <CDropdownItem href="#">
-          <CIcon icon={cilLockLocked} className="me-2" />
-          logout
-        </CDropdownItem>
+        <div
+          onClick={async () => {
+            try {
+              await signOut()
+              sessionStorage.clear()
+              navigate('/login')
+              // Optionally, you can handle any post-sign-out logic here
+            } catch (error) {
+              // Handle any errors that occur during the sign-out process
+              console.error('Sign-out error:', error)
+            }
+          }}
+        >
+          <CDropdownItem href="#">
+            <CIcon icon={cilLockLocked} className="me-2" />
+            logout
+          </CDropdownItem>
+        </div>
       </CDropdownMenu>
     </CDropdown>
   )

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CButton,
   CCard,
@@ -16,18 +16,37 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { signOut } from 'aws-amplify/auth'
 import { login } from '../../../../service/Auth'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useNavigate } from 'react-router-dom'
+import isAuthenticated from '../../../hooks/isAuthenticated'
+
 const Login = () => {
+  // navigate
+  const navigate = useNavigate()
+
   // State for email and password
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  isAuthenticated()
+
   // Function to handle login
   const handleLogin = async () => {
-    console.log('Username:', email)
-    console.log('Password:', password)
-    const response = await login(email, password)
-    console.log('Login:', response)
+    try {
+      console.log('Username:', email)
+      console.log('Password:', password)
+      const response = await login(email, password)
+      console.log('Login:', response)
+      const token = response.credentials?.credentials?.sessionToken
+      console.log('token', token)
+      sessionStorage.setItem('token', token)
+      sessionStorage.setItem('isAdminLogin', true)
+      navigate('/reports')
+    } catch (error) {
+      console.log('error:', error)
+      toast.error('Please try again')
+    }
   }
 
   // Function to handle forgot password
