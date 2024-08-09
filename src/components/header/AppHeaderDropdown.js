@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   CAvatar,
   CDropdown,
@@ -6,6 +6,7 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
+  CSpinner,
 } from '@coreui/react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
@@ -16,6 +17,22 @@ import { useNavigate } from 'react-router-dom'
 
 const AppHeaderDropdown = () => {
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+
+  const onLogout = async () => {
+    try {
+      sessionStorage.clear()
+      setLoading(true)
+      await signOut()
+      navigate('/login')
+      // Optionally, you can handle any post-sign-out logic here
+    } catch (error) {
+      // Handle any errors that occur during the sign-out process
+      console.error('Sign-out error:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <CDropdown variant="nav-item">
@@ -28,22 +45,10 @@ const AppHeaderDropdown = () => {
           <CIcon icon={cilUser} className="me-2" />
           Profile
         </CDropdownItem>
-        <div
-          onClick={async () => {
-            try {
-              await signOut()
-              sessionStorage.clear()
-              navigate('/login')
-              // Optionally, you can handle any post-sign-out logic here
-            } catch (error) {
-              // Handle any errors that occur during the sign-out process
-              console.error('Sign-out error:', error)
-            }
-          }}
-        >
+        <div onClick={() => onLogout()}>
           <CDropdownItem href="#">
-            <CIcon icon={cilLockLocked} className="me-2" />
-            logout
+            <CIcon icon={cilLockLocked} className="me-2" disabled={loading} />
+            {!loading ? 'logout' : <CSpinner size="sm" style={{ width: '1rem', height: '1rem' }} />}
           </CDropdownItem>
         </div>
       </CDropdownMenu>

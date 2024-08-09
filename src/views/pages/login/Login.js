@@ -11,11 +11,12 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CSpinner,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { signOut } from 'aws-amplify/auth'
-import { login } from '../../../../service/Auth'
+import { login } from '../../../service/Auth'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useNavigate } from 'react-router-dom'
@@ -28,12 +29,14 @@ const Login = () => {
   // State for email and password
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
   isAuthenticated()
 
   // Function to handle login
   const handleLogin = async () => {
     try {
+      setLoading(true)
       console.log('Username:', email)
       console.log('Password:', password)
       const response = await login(email, password)
@@ -46,6 +49,8 @@ const Login = () => {
     } catch (error) {
       console.log('error:', error)
       toast.error('Please try again')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -92,8 +97,17 @@ const Login = () => {
                     </CInputGroup>
                     <CRow className="item-center">
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4" onClick={handleLogin}>
-                          Login
+                        <CButton
+                          color="primary"
+                          className="px-4"
+                          disabled={loading}
+                          onClick={handleLogin}
+                        >
+                          {!loading ? (
+                            'Login'
+                          ) : (
+                            <CSpinner size="sm" style={{ width: '1rem', height: '1rem' }} />
+                          )}
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-end">
