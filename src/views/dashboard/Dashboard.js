@@ -57,7 +57,7 @@ const Dashboard = () => {
   const formattedDate = date.toLocaleDateString()
   const headers = [
     { label: 'Creator', key: 'reportedId.name' },
-    { label: 'No. of reports', key: 'reportCount' },
+    { label: 'No. of reports', key: 'reportedId.reportCount' },
     { label: 'Reasons', key: 'reasons' },
     { label: 'Link', key: 'postId.media.url' },
   ]
@@ -102,7 +102,7 @@ const Dashboard = () => {
                     </CTableDataCell>
                     <CTableDataCell>
                       <div className="d-flex justify-content-between text-nowrap">
-                        <div>{item?.reportCount}</div>
+                        <div>{item?.reportedId.reportCount}</div>
                       </div>
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
