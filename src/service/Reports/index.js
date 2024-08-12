@@ -9,7 +9,7 @@ export const getAllReports = async () => {
     return response
   } catch (error) {
     console.log('error:service:reports1:', error)
-    toast.error('Please try again')
+    toast.error(error)
   }
 }
 
@@ -19,6 +19,20 @@ export const getReportsById = async (id) => {
     return response
   } catch (error) {
     console.log('error:service:reports:', error)
-    toast.error('Please try again')
+    toast.error(error)
+  }
+}
+
+export const updateReportById = async (id, adminFeedback, action) => {
+  try {
+    const response = await axios.patch(`${API_URL}/report/${id}`, {
+      ticketStatus: 'RESOLVED',
+      adminFeedback,
+      action,
+    })
+    return response
+  } catch (error) {
+    console.log('error:service:reports:', error)
+    toast.error(error)
   }
 }

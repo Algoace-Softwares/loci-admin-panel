@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { CSVLink } from 'react-csv'
 
 import {
-  CCard,
+  CButton,
   CCardBody,
   CCol,
   CDropdown,
@@ -10,6 +10,12 @@ import {
   CDropdownMenu,
   CDropdownToggle,
   CFormInput,
+  CFormTextarea,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
   CRow,
   CSpinner,
   CTable,
@@ -22,13 +28,18 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilOptions } from '@coreui/icons'
-import { getAllReports } from '../../service/Reports'
+import { getAllReports, updateReportById } from '../../service/Reports'
 import { toast } from 'react-toastify'
 // TODO: loading ka kaam krna hy pori app may
 const Dashboard = () => {
   const [searchText, setSearchText] = useState('')
+  const [feedback, setFeedBack] = useState('')
+  const [rowId, setRowId] = useState('')
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
+  const [onSaveLoading, setOnSaveLoading] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [action, setAction] = useState('')
   useEffect(() => {
     // Define an async function to fetch data
     const fetchData = async () => {
@@ -51,7 +62,7 @@ const Dashboard = () => {
 
     fetchData() // Call the async function
   }, [])
-  console.log('data11', data)
+  console.log('data11', rowId)
 
   const date = new Date()
   const formattedDate = date.toLocaleDateString()
@@ -62,6 +73,24 @@ const Dashboard = () => {
     { label: 'Link', key: 'postId.media.url' },
   ]
   console.log('searchText', searchText)
+  const onActionPerformed = (action, item) => {
+    setAction(action)
+    setVisible(!visible)
+    setRowId(item._id)
+  }
+  const onSubmit = async () => {
+    try {
+      setOnSaveLoading(true)
+      const res = await updateReportById(rowId, feedback, action)
+      console.log('res', res)
+      setVisible(false)
+    } catch (error) {
+      console.log('error at 85', error)
+      toast.error(error)
+    } finally {
+      setOnSaveLoading(false)
+    }
+  }
   return (
     <CRow>
       {loading ? (
@@ -91,6 +120,7 @@ const Dashboard = () => {
                   <CTableHeaderCell className="bg-body-tertiary">No. of reports</CTableHeaderCell>
                   <CTableHeaderCell className="bg-body-tertiary ">Reasons</CTableHeaderCell>
                   <CTableHeaderCell className="bg-body-tertiary">Link</CTableHeaderCell>
+                  <CTableHeaderCell className="bg-body-tertiary">Status</CTableHeaderCell>
                   <CTableHeaderCell className="bg-body-tertiary">Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -115,6 +145,11 @@ const Dashboard = () => {
                           </div>
                         </div>
                       </CTooltip>
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <div className="d-flex justify-content-between text-nowrap">
+                        <div>{item?.ticketStatus.toLowerCase()}</div>
+                      </div>
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
                       {item.reportType === 'POST' ? (
@@ -141,9 +176,27 @@ const Dashboard = () => {
                             <CIcon style={{ color: 'black' }} icon={cilOptions} />
                           </CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem onClick={() => console.log('1')}>Remove</CDropdownItem>
-                            <CDropdownItem onClick={() => console.log('2')}>Warn</CDropdownItem>
-                            <CDropdownItem onClick={() => console.log('3')}>Ban</CDropdownItem>
+                            <CDropdownItem
+                              onClick={() => {
+                                onActionPerformed('REMOVE', item)
+                              }}
+                            >
+                              Remove
+                            </CDropdownItem>
+                            <CDropdownItem
+                              onClick={() => {
+                                onActionPerformed('WARN', item)
+                              }}
+                            >
+                              Warn
+                            </CDropdownItem>
+                            <CDropdownItem
+                              onClick={() => {
+                                onActionPerformed('BANNED', item)
+                              }}
+                            >
+                              Ban
+                            </CDropdownItem>
                           </CDropdownMenu>
                         </CDropdown>
                       </div>
@@ -176,6 +229,42 @@ const Dashboard = () => {
               </CSVLink>
             </div>
           </CCardBody>
+          {/* modal open */}
+
+          <CModal
+            backdrop="static"
+            visible={visible}
+            onClose={() => setVisible(false)}
+            aria-labelledby="StaticBackdropExampleLabel"
+          >
+            <CModalHeader>
+              <CModalTitle id="StaticBackdropExampleLabel">
+                Please provide Feedback for this action {' ' + action.toLowerCase()}
+              </CModalTitle>
+            </CModalHeader>
+            <div className="m-2">
+              <CFormTextarea
+                id="floatingTextarea"
+                floatingLabel="Type here..."
+                style={{ height: '400px' }}
+                onChange={(e) => {
+                  setFeedBack(e.target.value)
+                }}
+              ></CFormTextarea>
+            </div>
+            <CModalFooter>
+              <CButton color="secondary" onClick={() => setVisible(false)}>
+                Close
+              </CButton>
+              <CButton color="primary" onClick={() => onSubmit()}>
+                {!onSaveLoading ? (
+                  'Save changes'
+                ) : (
+                  <CSpinner size="sm" style={{ width: '1rem', height: '1rem' }} />
+                )}
+              </CButton>
+            </CModalFooter>
+          </CModal>
         </CCol>
       )}
     </CRow>
