@@ -2,9 +2,9 @@ import { API_URL } from '..'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-export const getAllReports = async () => {
+export const getAllReports = async (currentPage) => {
   try {
-    const response = await axios.get(`${API_URL}/report/all`)
+    const response = await axios.get(`${API_URL}/report/all?page=${currentPage}&limit=50`)
     console.log('response', response)
     return response
   } catch (error) {

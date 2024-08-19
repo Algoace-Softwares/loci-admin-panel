@@ -40,18 +40,29 @@ const Dashboard = () => {
   const [onSaveLoading, setOnSaveLoading] = useState(false)
   const [visible, setVisible] = useState(false)
   const [action, setAction] = useState('')
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+
   useEffect(() => {
     // Define an async function to fetch data
     const fetchData = async () => {
       try {
         // Replace with your API endpoint
-        const response = await getAllReports()
+        const response = await getAllReports(currentPage)
         if (response?.data?.error) {
           toast.error(response?.data?.message)
           return
         }
-        const result = response.data.data
+        const result = response.data.data.items
+        const pageInfo = response.data.data
+        // response.data.data.page
+        // response.data.data.limit
+        // please work on pagination which comes on page and limit variables from API pagination through button
+
+        console.log('result123', result)
         setData(result) // Update the state with the fetched data
+        setTotalPages(pageInfo.totalPages)
       } catch (error) {
         toast.error(error)
         setError(error) // Update the state with the error
@@ -61,7 +72,7 @@ const Dashboard = () => {
     }
 
     fetchData() // Call the async function
-  }, [])
+  }, [currentPage])
   console.log('data11', rowId)
 
   const date = new Date()
@@ -89,6 +100,11 @@ const Dashboard = () => {
       toast.error(error)
     } finally {
       setOnSaveLoading(false)
+    }
+  }
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage)
     }
   }
   return (
@@ -125,7 +141,7 @@ const Dashboard = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {data.map((item, index) => (
+                {data?.map((item, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
                     <CTableDataCell>
                       <div>{item?.reportedId?.name}</div>
@@ -167,11 +183,11 @@ const Dashboard = () => {
                       )}
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
-                      <div className="d-flex justify-content-between text-nowrap">
+                      <div className="d-flex justify-content-between text-nowrap ">
                         <CDropdown alignment="end">
                           <CDropdownToggle
                             caret={false}
-                            className="text-black border-3 rounded p-0"
+                            className="text-black border-3 rounded p-0 "
                           >
                             <CIcon style={{ color: 'black' }} icon={cilOptions} />
                           </CDropdownToggle>
@@ -206,29 +222,7 @@ const Dashboard = () => {
               </CTableBody>
             </CTable>
           </CCardBody>
-          {/*  */}
-          <CCardBody className="py-3">
-            <div onClick={() => console.log('asd')}>
-              {/* <CButton></CButton> */}
-              <CSVLink
-                filename={`reports-${formattedDate}.csv`}
-                style={{
-                  backgroundColor: '#35B7F6',
-                  color: 'white',
-                  padding: '10px 20px',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  fontSize: '16px',
-                  textDecoration: 'none',
-                }}
-                data={data}
-                headers={headers}
-              >
-                Download me
-              </CSVLink>
-            </div>
-          </CCardBody>
+
           {/* modal open */}
 
           <CModal
@@ -265,6 +259,52 @@ const Dashboard = () => {
               </CButton>
             </CModalFooter>
           </CModal>
+
+          {/* pagination */}
+          <div className="pagination-controls d-flex align-items-center justify-content-between my-3 ">
+            <CButton
+              color="primary"
+              variant="outline"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="me-2"
+            >
+              Previous
+            </CButton>
+            <span className="mx-3">
+              Page {currentPage} of {totalPages}
+            </span>
+            <CButton
+              color="primary"
+              variant="outline"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="ms-2"
+            >
+              Next
+            </CButton>
+          </div>
+
+          {/*  */}
+          <CCardBody>
+            <CSVLink
+              filename={`reports-${formattedDate}.csv`}
+              style={{
+                backgroundColor: '#35B7F6',
+                color: 'white',
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '16px',
+                textDecoration: 'none',
+              }}
+              data={data}
+              headers={headers}
+            >
+              Download me
+            </CSVLink>
+          </CCardBody>
         </CCol>
       )}
     </CRow>
