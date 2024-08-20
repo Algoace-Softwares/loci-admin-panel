@@ -6,13 +6,13 @@ const isAuthenticated = () => {
   const isAdminLogin = sessionStorage.getItem('isAdminLogin')
   useEffect(() => {
     console.log('AppContent')
-    if (!isAdminLogin) {
-      console.log('AppContent1')
-      navigate('/login')
-    } else {
-      console.log('AppContent2')
-      navigate('/reports')
-    }
+    // if (!isAdminLogin) {
+    //   console.log('AppContent1')
+    //   navigate('/login')
+    // } else {
+    //   console.log('AppContent2')
+    //   navigate('/reports')
+    // }
   }, [])
 }
 

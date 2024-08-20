@@ -15,6 +15,7 @@ const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 import { Amplify } from 'aws-amplify'
 import aws_config from './amplifyconfiguration.json'
+import ForgotPassword from './views/pages/forgotPassword/forgotPassword'
 
 const App = () => {
   Amplify.configure(aws_config)
@@ -50,7 +51,7 @@ const App = () => {
         <Routes>
           <Route exact path="/login" name="Login Page" element={<Login />} />
           <Route exact path="/register" name="Register Page" element={<Register />} />
-          {/* <Route exact path="*" name="Page 404" element={<Page404 />} /> */}
+          <Route exact path="/forget-password" name="ForgotPassword" element={<ForgotPassword />} />
           <Route exact path="/500" name="Page 500" element={<Page500 />} />
           <Route path="*" name="Home" element={<DefaultLayout />} />
           {/* isAdminLogin &&  */}

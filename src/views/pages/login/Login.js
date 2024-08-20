@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   CButton,
   CCard,
@@ -15,12 +15,10 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
-import { signOut } from 'aws-amplify/auth'
 import { login } from '../../../service/Auth'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useNavigate } from 'react-router-dom'
-import isAuthenticated from '../../../hooks/isAuthenticated'
 
 const Login = () => {
   // navigate
@@ -31,7 +29,7 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
-  isAuthenticated()
+  // isAuthenticated()
 
   // Function to handle login
   const handleLogin = async () => {
@@ -56,7 +54,7 @@ const Login = () => {
 
   // Function to handle forgot password
   const handleForgotPassword = async () => {
-    await signOut()
+    navigate('/forget-password')
     console.log('Forgot password clicked')
   }
 
