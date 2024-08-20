@@ -7,7 +7,7 @@ import routes from '../routes'
 import isAuthenticated from '../hooks/isAuthenticated'
 
 const AppContent = () => {
-  isAuthenticated()
+  // isAuthenticated()
   return (
     <CContainer className="px-4" lg>
       <Suspense fallback={<CSpinner color="primary" />}>

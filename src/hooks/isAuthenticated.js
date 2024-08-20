@@ -3,16 +3,16 @@ import { useNavigate } from 'react-router-dom'
 
 const isAuthenticated = () => {
   const navigate = useNavigate()
-  const isAdminLogin = sessionStorage.getItem('isAdminLogin')
+  const isAdminLogin = localStorage.getItem('isAdminLogin')
   useEffect(() => {
     console.log('AppContent')
-    // if (!isAdminLogin) {
-    //   console.log('AppContent1')
-    //   navigate('/login')
-    // } else {
-    //   console.log('AppContent2')
-    //   navigate('/reports')
-    // }
+    if (!isAdminLogin) {
+      console.log('AppContent1')
+      navigate('/login')
+    } else {
+      console.log('AppContent2')
+      navigate('/reports')
+    }
   }, [])
 }
 

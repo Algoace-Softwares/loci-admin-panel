@@ -16,27 +16,15 @@ const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 import { Amplify } from 'aws-amplify'
 import aws_config from './amplifyconfiguration.json'
 import ForgotPassword from './views/pages/forgotPassword/forgotPassword'
+import ProtectedRoute from './components/ProtectedRoutes'
 
 const App = () => {
   Amplify.configure(aws_config)
-  const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
-  const storedTheme = useSelector((state) => state.theme)
-  const isAdminLogin = sessionStorage.getItem('isAdminLogin')
-
+  const { setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
+  const isAdminLogin = localStorage.getItem('isAdminLogin')
+  console.log('isAdminLogin', isAdminLogin)
   useEffect(() => {
-    console.log('data', isAdminLogin)
-
-    const urlParams = new URLSearchParams(window.location.href.split('?')[1])
-    const theme = urlParams.get('theme') && urlParams.get('theme').match(/^[A-Za-z0-9\s]+/)[0]
-    if (theme) {
-      setColorMode(theme)
-    }
-
-    if (isColorModeSet()) {
-      return
-    }
-
-    setColorMode(storedTheme)
+    setColorMode('light')
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -53,7 +41,7 @@ const App = () => {
           <Route exact path="/register" name="Register Page" element={<Register />} />
           <Route exact path="/forget-password" name="ForgotPassword" element={<ForgotPassword />} />
           <Route exact path="/500" name="Page 500" element={<Page500 />} />
-          <Route path="*" name="Home" element={<DefaultLayout />} />
+          <Route path="/" element={<ProtectedRoute element={<DefaultLayout />} />} />
           {/* isAdminLogin &&  */}
         </Routes>
       </Suspense>

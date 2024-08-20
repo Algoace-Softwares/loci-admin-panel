@@ -21,7 +21,7 @@ const AppHeaderDropdown = () => {
 
   const onLogout = async () => {
     try {
-      sessionStorage.clear()
+      localStorage.clear()
       setLoading(true)
       await signOut()
       navigate('/login')
