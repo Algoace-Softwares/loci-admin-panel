@@ -29,8 +29,8 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-
-  // isAuthenticated()
+  console.log('first')
+  isAuthenticated()
 
   // Function to handle login
   const handleLogin = async () => {

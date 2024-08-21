@@ -43,13 +43,13 @@ const Dashboard = () => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-
+  console.log('Pagination state')
   useEffect(() => {
     // Define an async function to fetch data
     const fetchData = async () => {
       try {
         // Replace with your API endpoint
-        const response = await getAllReports(currentPage)
+        const response = await getAllReports(currentPage, searchText.trim())
         if (response?.data?.error) {
           toast.error(response?.data?.message)
           return
@@ -72,7 +72,7 @@ const Dashboard = () => {
     }
 
     fetchData() // Call the async function
-  }, [currentPage])
+  }, [currentPage, searchText])
   console.log('data11', rowId)
 
   const date = new Date()
@@ -83,7 +83,7 @@ const Dashboard = () => {
     { label: 'Reasons', key: 'reasons' },
     { label: 'Link', key: 'postId.media.url' },
   ]
-  console.log('searchText', searchText)
+
   const onActionPerformed = (action, item) => {
     setAction(action)
     setVisible(!visible)
@@ -123,7 +123,7 @@ const Dashboard = () => {
             <div className="py-4">
               <CFormInput
                 type="text"
-                placeholder="Search report"
+                placeholder="Search report through reasons"
                 aria-label="default input example"
                 onChange={(e) => setSearchText(e.target.value)}
               />
