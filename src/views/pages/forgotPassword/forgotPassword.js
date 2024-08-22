@@ -14,10 +14,11 @@ import {
   CRow,
   CSpinner,
 } from '@coreui/react'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { confirmResetPassword, resetPassword } from 'aws-amplify/auth'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { toast, ToastContainer } from 'react-toastify'
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')
@@ -26,39 +27,64 @@ const ForgotPassword = () => {
   const [otp, setOTP] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [resendLoading, setResendLoading] = useState(false)
+  const [resendMessage, setResendMessage] = useState('')
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
   const navigate = useNavigate()
+
   const forgotPassword = async () => {
+    if (!emailRegex.test(email)) {
+      toast.error('Please enter a valid email address.')
+      return
+    }
+
     try {
       setLoading(true)
       await resetPassword({ username: email })
       setIsOTP(true)
     } catch (error) {
       console.log('error reset password', error)
-      toast.error(error.message)
+      toast.error(error.message || 'An error occurred while resetting password.')
     } finally {
       setLoading(false)
+    }
+  }
+  // resend verification code
+  const resendVerificationCode = async () => {
+    try {
+      setResendLoading(true)
+      await resetPassword({ username: email }) // This request should trigger a new code
+      setResendMessage('Verification code sent successfully.')
+    } catch (error) {
+      console.error('Error resending verification code:', error)
+      setResendMessage(error.message || 'An error occurred while resending the verification code.')
+    } finally {
+      setResendLoading(false)
     }
   }
 
   const forgotPasswordConfirm = async () => {
     try {
+      setLoading(true)
       console.log('confirm forgot password')
       await confirmResetPassword({
         username: email,
         confirmationCode: otp,
-        newPassword: confirmPassword,
+        newPassword: password,
       })
-      toast.success('Successfully Password changes')
+      toast.success('Successfully changed password.')
       navigate('/login')
     } catch (error) {
-      console.log('error reset password', error)
-      toast.error(error.message)
+      console.log('error confirm reset password', error)
+      toast.error(error.message || 'An error occurred while confirming the password.')
+    } finally {
+      setLoading(false)
     }
   }
-  console.log(email)
+
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
-      <ToastContainer />
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={6}>
@@ -69,68 +95,79 @@ const ForgotPassword = () => {
                     {!isOtp ? (
                       <>
                         <h1>Forgot Password</h1>
-                        <p className="text-body-secondary">Please Enter your email</p>
+                        <p className="text-body-secondary">Please enter your email</p>
                         <CInputGroup className="mb-3">
                           <CInputGroupText>
                             <CIcon icon={cilUser} />
                           </CInputGroupText>
                           <CFormInput
-                            placeholder="email"
-                            autoComplete="email"
+                            type="email"
+                            placeholder="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            required
                           />
                         </CInputGroup>
                       </>
                     ) : (
                       <>
-                        <div>
-                          <h1>OTP</h1>
-                          <p className="text-body-secondary">Please Check your email</p>
-                          <CInputGroup className="mb-3">
-                            <CInputGroupText>
-                              <CIcon icon={cilUser} />
-                            </CInputGroupText>
-                            <CFormInput
-                              placeholder="otp"
-                              autoComplete="otp"
-                              value={otp}
-                              onChange={(e) => setOTP(e.target.value)}
-                            />
-                          </CInputGroup>
-                        </div>
-                        <div>
-                          <h1>Password</h1>
-                          <p className="text-body-secondary">Password</p>
-                          <CInputGroup className="mb-3">
-                            <CInputGroupText>
-                              <CIcon icon={cilUser} />
-                            </CInputGroupText>
-                            <CFormInput
-                              placeholder="password"
-                              autoComplete="password"
-                              type="password"
-                              value={password}
-                              onChange={(e) => setPassword(e.target.value)}
-                            />
-                          </CInputGroup>
-                        </div>
-                        <div>
-                          <h1>Confirm Password</h1>
-                          <p className="text-body-secondary">Confirm Password</p>
-                          <CInputGroup className="mb-3">
-                            <CInputGroupText>
-                              <CIcon icon={cilUser} />
-                            </CInputGroupText>
-                            <CFormInput
-                              placeholder="password"
-                              autoComplete="password"
-                              type="password"
-                              value={confirmPassword}
-                              onChange={(e) => setConfirmPassword(e.target.value)}
-                            />
-                          </CInputGroup>
-                        </div>
+                        <h1>OTP</h1>
+                        <p className="text-body-secondary">Please check your email for the OTP</p>
+                        <CInputGroup className="mb-3">
+                          <CInputGroupText>
+                            <CIcon icon={cilUser} />
+                          </CInputGroupText>
+                          <CFormInput
+                            placeholder="OTP"
+                            type="text"
+                            value={otp}
+                            onChange={(e) => setOTP(e.target.value)}
+                            required
+                          />
+                        </CInputGroup>
+                        <p className="text-body-secondary">New Password</p>
+                        <CInputGroup className="mb-3">
+                          <CInputGroupText>
+                            <CIcon icon={cilUser} />
+                          </CInputGroupText>
+                          <CFormInput
+                            placeholder="New Password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                          />
+                        </CInputGroup>
+                        <p className="text-body-secondary">Confirm Password</p>
+                        <CInputGroup className="mb-3">
+                          <CInputGroupText>
+                            <CIcon icon={cilUser} />
+                          </CInputGroupText>
+                          <CFormInput
+                            placeholder="Confirm Password"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                          />
+                        </CInputGroup>
+                        <CRow className="my-3">
+                          <CCol xs={12}>
+                            <CButton
+                              color="secondary"
+                              className="px-4"
+                              disabled={resendLoading || !email}
+                              onClick={resendVerificationCode}
+                            >
+                              {resendLoading ? (
+                                <CSpinner size="sm" style={{ width: '1rem', height: '1rem' }} />
+                              ) : (
+                                'Resend Code'
+                              )}
+                            </CButton>
+                            {resendMessage && <p className="text-success">{resendMessage}</p>}
+                          </CCol>
+                        </CRow>
                       </>
                     )}
                     <CRow className="item-center">
@@ -138,7 +175,9 @@ const ForgotPassword = () => {
                         <CButton
                           color="primary"
                           className="px-4"
-                          disabled={loading || !email}
+                          disabled={
+                            loading || !email || (isOtp && (password !== confirmPassword || !otp))
+                          }
                           onClick={() => {
                             !isOtp ? forgotPassword() : forgotPasswordConfirm()
                           }}
@@ -160,6 +199,7 @@ const ForgotPassword = () => {
           </CCol>
         </CRow>
       </CContainer>
+      <ToastContainer /> {/* Add ToastContainer here */}
     </div>
   )
 }

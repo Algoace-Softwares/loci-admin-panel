@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { CSVLink } from 'react-csv'
 
 import {
@@ -30,6 +30,7 @@ import CIcon from '@coreui/icons-react'
 import { cilOptions } from '@coreui/icons'
 import { getAllReports, updateReportById } from '../../service/Reports'
 import { toast } from 'react-toastify'
+import { debounce } from 'lodash'
 // TODO: loading ka kaam krna hy pori app may
 const Dashboard = () => {
   const [searchText, setSearchText] = useState('')
@@ -107,6 +108,18 @@ const Dashboard = () => {
       setCurrentPage(newPage)
     }
   }
+  const debouncedSearch = useCallback(
+    debounce((query) => {
+      setSearchText(query)
+      console.log('Searching for:', query)
+    }, 500),
+    [],
+  )
+  const handleChange = (event) => {
+    const query = event.target.value
+    debouncedSearch(query) // Call the debounced function
+  }
+
   return (
     <CRow>
       {loading ? (
@@ -123,104 +136,114 @@ const Dashboard = () => {
             <div className="py-4">
               <CFormInput
                 type="text"
-                placeholder="Search report through reasons"
-                aria-label="default input example"
-                onChange={(e) => setSearchText(e.target.value)}
+                placeholder="Search Report by Reason"
+                onChange={handleChange}
               />
             </div>
-            <CTable align="middle" className="mb-0 border" hover responsive>
-              <CTableHead className="text-nowrap">
-                <CTableRow>
-                  <CTableHeaderCell className="bg-body-tertiary">Creator</CTableHeaderCell>
-
-                  <CTableHeaderCell className="bg-body-tertiary">No. of reports</CTableHeaderCell>
-                  <CTableHeaderCell className="bg-body-tertiary ">Reasons</CTableHeaderCell>
-                  <CTableHeaderCell className="bg-body-tertiary">Link</CTableHeaderCell>
-                  <CTableHeaderCell className="bg-body-tertiary">Status</CTableHeaderCell>
-                  <CTableHeaderCell className="bg-body-tertiary">Action</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {data?.map((item, index) => (
-                  <CTableRow v-for="item in tableItems" key={index}>
-                    <CTableDataCell>
-                      <div>{item?.reportedId?.name}</div>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      <div className="d-flex justify-content-between text-nowrap">
-                        <div>{item?.reportedId.reportCount}</div>
-                      </div>
-                    </CTableDataCell>
-                    <CTableDataCell className="text-center">
-                      <CTooltip content={item.reasons.join(', ')}>
+            {data && data.length > 0 ? (
+              <CTable align="middle" className="mb-0 border" hover responsive>
+                <CTableHead className="text-nowrap">
+                  <CTableRow>
+                    <CTableHeaderCell className="bg-body-tertiary">Creator</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">No. of reports</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Reasons</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Status</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Link</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Action</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {data.map((item, index) => (
+                    <CTableRow key={index}>
+                      <CTableDataCell>
+                        <div>{item?.reportedId?.name}</div>
+                      </CTableDataCell>
+                      <CTableDataCell>
                         <div className="d-flex justify-content-between text-nowrap">
-                          <div>
-                            {item?.reasons.join(', ').length > 30
-                              ? item.reasons.join(', ').slice(0, 30) + '...'
-                              : item.reasons.join(', ')}
+                          <div>{item?.reportedId.reportCount}</div>
+                        </div>
+                      </CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        <CTooltip content={item.reasons.join(', ')}>
+                          <div className="d-flex justify-content-between text-nowrap">
+                            <div>
+                              {item?.reasons.join(', ').length > 30
+                                ? item.reasons.join(', ').slice(0, 30) + '...'
+                                : item.reasons.join(', ')}
+                            </div>
                           </div>
-                        </div>
-                      </CTooltip>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      <div className="d-flex justify-content-between text-nowrap">
-                        <div>{item?.ticketStatus.toLowerCase()}</div>
-                      </div>
-                    </CTableDataCell>
-                    <CTableDataCell className="text-center">
-                      {item.reportType === 'POST' ? (
+                        </CTooltip>
+                      </CTableDataCell>
+                      <CTableDataCell>
                         <div className="d-flex justify-content-between text-nowrap">
-                          <a
-                            href={item?.postId?.media?.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            click here
-                          </a>
+                          <div>{item?.ticketStatus.toLowerCase()}</div>
                         </div>
-                      ) : (
-                        <div className="d-flex justify-content-between text-nowrap">-</div>
-                      )}
-                    </CTableDataCell>
-                    <CTableDataCell className="text-center">
-                      <div className="d-flex justify-content-between text-nowrap ">
-                        <CDropdown alignment="end">
-                          <CDropdownToggle
-                            caret={false}
-                            className="text-black border-3 rounded p-0 "
-                          >
-                            <CIcon style={{ color: 'black' }} icon={cilOptions} />
-                          </CDropdownToggle>
-                          <CDropdownMenu>
-                            <CDropdownItem
-                              onClick={() => {
-                                onActionPerformed('REMOVE', item)
-                              }}
+                      </CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        {item.reportType === 'POST' ? (
+                          <div className="d-flex justify-content-between text-nowrap">
+                            <a
+                              href={item?.postId?.media?.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
                             >
-                              Remove
-                            </CDropdownItem>
-                            <CDropdownItem
-                              onClick={() => {
-                                onActionPerformed('WARN', item)
-                              }}
+                              click here
+                            </a>
+                          </div>
+                        ) : (
+                          <div className="d-flex justify-content-between text-nowrap">-</div>
+                        )}
+                      </CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        <div className="d-flex justify-content-between text-nowrap">
+                          <CDropdown alignment="end">
+                            <CDropdownToggle
+                              caret={false}
+                              className="text-black border-3 rounded p-0"
                             >
-                              Warn
-                            </CDropdownItem>
-                            <CDropdownItem
-                              onClick={() => {
-                                onActionPerformed('BANNED', item)
-                              }}
-                            >
-                              Ban
-                            </CDropdownItem>
-                          </CDropdownMenu>
-                        </CDropdown>
-                      </div>
+                              <CIcon style={{ color: 'black' }} icon={cilOptions} />
+                            </CDropdownToggle>
+                            <CDropdownMenu>
+                              <CDropdownItem
+                                onClick={() => {
+                                  onActionPerformed('REMOVE', item)
+                                }}
+                              >
+                                Remove
+                              </CDropdownItem>
+                              <CDropdownItem
+                                onClick={() => {
+                                  onActionPerformed('WARN', item)
+                                }}
+                              >
+                                Warn
+                              </CDropdownItem>
+                              <CDropdownItem
+                                onClick={() => {
+                                  onActionPerformed('BANNED', item)
+                                }}
+                              >
+                                Ban
+                              </CDropdownItem>
+                            </CDropdownMenu>
+                          </CDropdown>
+                        </div>
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+              </CTable>
+            ) : (
+              <CTable align="middle" className="mb-0 border" hover responsive>
+                <CTableBody>
+                  <CTableRow>
+                    <CTableDataCell colSpan={6} className="text-center">
+                      No data found
                     </CTableDataCell>
                   </CTableRow>
-                ))}
-              </CTableBody>
-            </CTable>
+                </CTableBody>
+              </CTable>
+            )}
           </CCardBody>
 
           {/* modal open */}
@@ -250,7 +273,12 @@ const Dashboard = () => {
               <CButton color="secondary" onClick={() => setVisible(false)}>
                 Close
               </CButton>
-              <CButton color="primary" onClick={() => onSubmit()}>
+
+              <CButton
+                color="primary"
+                onClick={() => onSubmit()}
+                disabled={!feedback?.trim()?.length > 0}
+              >
                 {!onSaveLoading ? (
                   'Save changes'
                 ) : (
@@ -286,25 +314,27 @@ const Dashboard = () => {
           </div>
 
           {/*  */}
-          <CCardBody>
-            <CSVLink
-              filename={`reports-${formattedDate}.csv`}
-              style={{
-                backgroundColor: '#35B7F6',
-                color: 'white',
-                padding: '10px 20px',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontSize: '16px',
-                textDecoration: 'none',
-              }}
-              data={data}
-              headers={headers}
-            >
-              Download me
-            </CSVLink>
-          </CCardBody>
+          {data?.length > 0 && (
+            <CCardBody>
+              <CSVLink
+                filename={`reports-${formattedDate}.csv`}
+                style={{
+                  backgroundColor: '#35B7F6',
+                  color: 'white',
+                  padding: '10px 20px',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  textDecoration: 'none',
+                }}
+                data={data}
+                headers={headers}
+              >
+                Download me
+              </CSVLink>
+            </CCardBody>
+          )}
         </CCol>
       )}
     </CRow>
