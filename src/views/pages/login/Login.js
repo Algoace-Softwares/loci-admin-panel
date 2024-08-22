@@ -105,7 +105,12 @@ const Login = () => {
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-end">
-                        <CButton color="link" className="p-0" onClick={handleForgotPassword}>
+                        <CButton
+                          color="link"
+                          className="p-0"
+                          disabled={loading}
+                          onClick={handleForgotPassword}
+                        >
                           Forgot password?
                         </CButton>
                       </CCol>
