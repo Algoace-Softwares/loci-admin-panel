@@ -6,7 +6,7 @@ import isAuthenticated from '../hooks/isAuthenticated'
 // Lazy-loaded components
 const Register = lazy(() => import('../views/pages/register/Register'))
 const Login = lazy(() => import('../views/pages/login/Login'))
-const ForgotPassword = lazy(() => import('../views/pages/forgotPassword/ForgotPassword.js'))
+const ForgotPassword = lazy(() => import('../views/pages/forgotPassword/ForgotPassword'))
 const Page500 = lazy(() => import('../views/pages/page500/Page500'))
 const DefaultLayout = lazy(() => import('./DefaultLayout'))
 

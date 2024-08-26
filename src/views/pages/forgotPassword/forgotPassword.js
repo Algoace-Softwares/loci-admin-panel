@@ -33,7 +33,7 @@ const ForgotPassword = () => {
 
   const navigate = useNavigate()
 
-  const forgotPassword = async () => {
+  const onForgotPassword = async () => {
     if (!emailRegex.test(email)) {
       toast.error('Please enter a valid email address.')
       return
@@ -179,7 +179,7 @@ const ForgotPassword = () => {
                             loading || !email || (isOtp && (password !== confirmPassword || !otp))
                           }
                           onClick={() => {
-                            !isOtp ? forgotPassword() : forgotPasswordConfirm()
+                            !isOtp ? onForgotPassword() : forgotPasswordConfirm()
                           }}
                         >
                           {loading ? (
