@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { CSpinner, useColorModes } from '@coreui/react'
 import './scss/style.scss'
 import { Amplify } from 'aws-amplify'
-import aws_config from './amplifyconfiguration.json'
+import aws_config from './aws-exports'
 import MainRoutes from './layout/MainRoutes'
 import { ToastContainer } from 'react-toastify'
 
