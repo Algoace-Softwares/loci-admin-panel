@@ -19,7 +19,7 @@ export const login = async (email, password) => {
     console.log('Authentication session:', token, attribute)
 
     const cognitoId = currentUser.userId
-    console.log('Cognito ID:', cognitoId)
+    console.log('Cognito ID :', cognitoId)
 
     if (attribute?.tokens?.accessToken?.payload?.['cognito:groups']?.[0] !== 'Admin') {
       console.log('User is not an Admin')
