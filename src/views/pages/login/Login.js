@@ -42,8 +42,9 @@ const Login = () => {
       localStorage.setItem('isAdminLogin', true)
       navigate('/reports')
     } catch (error) {
-      console.log('error:', error)
-      toast.error('error:' + error)
+      console.log('error:11', error.stack)
+
+      toast.error(error)
     } finally {
       setLoading(false)
     }
