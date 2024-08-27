@@ -5,6 +5,9 @@ import 'core-js'
 
 import App from './App'
 import store from './store'
+import { Amplify } from 'aws-amplify'
+import aws_config from './aws-exports'
+Amplify.configure(aws_config)
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
