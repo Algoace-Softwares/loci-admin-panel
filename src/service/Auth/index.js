@@ -4,32 +4,48 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 
 export const login = async (email, password) => {
-  const res = await signIn({ username: email, password })
+  try {
+    console.log('Attempting to sign in with email:', email)
+    const res = await signIn({ username: email, password })
+    console.log('Sign-in response:', res)
 
-  const currentUser = await getCurrentUser()
-  const attribute = await fetchAuthSession()
+    console.log('Fetching current user')
+    const currentUser = await getCurrentUser()
+    console.log('Current user:', currentUser)
 
-  const cognitoId = currentUser.userId
-  if (attribute?.tokens?.accessToken?.payload?.['cognito:groups']?.[0] !== 'Admin') {
-    console.log('not admin')
-    toast.error('Not an Admin')
-    await signOut()
-    return
-    // show error
+    console.log('Fetching authentication session')
+    const attribute = await fetchAuthSession()
+    const token = `Bearer ${attribute?.tokens?.accessToken}`
+    console.log('Authentication session:', token, attribute)
+
+    const cognitoId = currentUser.userId
+    console.log('Cognito ID:', cognitoId)
+
+    if (attribute?.tokens?.accessToken?.payload?.['cognito:groups']?.[0] !== 'Admin') {
+      console.log('User is not an Admin')
+      toast.error('Not an Admin')
+      console.log('Signing out user')
+      await signOut()
+      console.log('User signed out')
+      return
+    }
+
+    // BACKEND API
+    console.log('Making API request to get user information')
+    const loginAPI = await axios.get(`${API_URL}/user?cognitoId=${cognitoId}`, {
+      headers: { Authorization: token },
+    })
+    console.log('API response:', loginAPI)
+
+    console.log('Final log information:', {
+      signInResponse: res,
+      currentUser,
+      authSession: attribute,
+      apiResponse: loginAPI,
+      isAdmin: attribute?.tokens?.accessToken?.payload['cognito:groups'],
+    })
+    return { data: loginAPI.data, credentials: attribute }
+  } catch (error) {
+    console.log('error:45', error)
   }
-  // BACKEND API
-
-  const loginAPI = await axios.get(`${API_URL}/user?cognitoId=${cognitoId}`)
-
-  console.log(
-    'Current user: ',
-    res,
-    currentUser,
-    attribute,
-    loginAPI,
-    'isAdmin',
-    attribute?.tokens?.accessToken?.payload['cognito:groups'],
-  )
-
-  return { data: loginAPI.data, credentials: attribute }
 }
