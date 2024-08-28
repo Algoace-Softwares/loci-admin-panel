@@ -4,6 +4,7 @@ import { CSpinner, useColorModes } from '@coreui/react'
 import './scss/style.scss'
 import MainRoutes from './layout/MainRoutes'
 import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const App = () => {
   const { setColorMode } = useColorModes('coreui-free-react-admin-template-theme')

@@ -46,7 +46,7 @@ export const login = async (email, password) => {
     })
     return { data: loginAPI.data, credentials: attribute }
   } catch (error) {
-    console.log('error:45', error)
-    throw new Error(error)
+    console.log('error:45', error.message, error.code)
+    throw new Error(error.message)
   }
 }

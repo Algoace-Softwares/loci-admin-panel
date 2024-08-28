@@ -16,7 +16,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { login } from '../../../service/Auth'
-import { toast } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useNavigate } from 'react-router-dom'
 import isAuthenticated from '../../../hooks/isAuthenticated'
@@ -42,8 +42,7 @@ const Login = () => {
       localStorage.setItem('isAdminLogin', true)
       navigate('/reports')
     } catch (error) {
-      console.log('error:11', error.stack)
-
+      console.log('error:11', error)
       toast.error(error)
     } finally {
       setLoading(false)
@@ -58,6 +57,7 @@ const Login = () => {
 
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
+      <ToastContainer />
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={6}>
@@ -95,7 +95,7 @@ const Login = () => {
                         <CButton
                           color="primary"
                           className="px-4"
-                          disabled={loading}
+                          disabled={loading || !email || !password}
                           onClick={handleLogin}
                         >
                           {!loading ? (
