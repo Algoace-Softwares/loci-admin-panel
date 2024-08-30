@@ -199,7 +199,18 @@ const ForgotPassword = () => {
           </CCol>
         </CRow>
       </CContainer>
-      <ToastContainer /> {/* Add ToastContainer here */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />{' '}
+      {/* Add ToastContainer here */}
     </div>
   )
 }
