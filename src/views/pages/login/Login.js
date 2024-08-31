@@ -17,9 +17,9 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { login } from '../../../service/Auth'
 import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { useNavigate } from 'react-router-dom'
 import isAuthenticated from '../../../hooks/isAuthenticated'
+import 'react-toastify/dist/ReactToastify.css'
 
 const Login = () => {
   // navigate
@@ -41,23 +41,23 @@ const Login = () => {
       localStorage.setItem('token', token)
       localStorage.setItem('isAdminLogin', true)
       navigate('/reports')
+      toast.success('Login successful!') // Show success message
     } catch (error) {
-      console.log('error:11', error)
-      toast.error(error)
+      console.error('error:', error)
+      toast.error(error.message || 'An error occurred during login.') // Show error message
     } finally {
       setLoading(false)
     }
   }
 
   // Function to handle forgot password
-  const handleForgotPassword = async () => {
+  const handleForgotPassword = () => {
     navigate('/forget-password')
     console.log('Forgot password clicked')
   }
 
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
-      <ToastContainer />
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={6}>
@@ -123,6 +123,17 @@ const Login = () => {
           </CCol>
         </CRow>
       </CContainer>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   )
 }
