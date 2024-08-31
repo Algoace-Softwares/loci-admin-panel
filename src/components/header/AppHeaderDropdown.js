@@ -8,7 +8,7 @@ import {
   CDropdownToggle,
   CSpinner,
 } from '@coreui/react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { cilLockLocked, cilExitToApp } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
@@ -33,14 +33,23 @@ const AppHeaderDropdown = () => {
       setLoading(false)
     }
   }
-
+  // cilExitToApp
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
-        <CAvatar src={avatar8} size="md" />
+        {/* <CAvatar src={avatar8} size="md" /> */}
+        <CIcon
+          icon={cilExitToApp}
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '30px',
+            width: '20px',
+          }}
+        />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownHeader className="bg-body-secondary fw-semibold my-2">Settings</CDropdownHeader>
         {/* <CDropdownItem href="#">
           <CIcon icon={cilUser} className="me-2" />
           Profile
