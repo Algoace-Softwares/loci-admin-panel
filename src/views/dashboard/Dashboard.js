@@ -132,6 +132,27 @@ const Dashboard = () => {
         </CRow>
       ) : (
         <CCol xs>
+          {data?.length > 0 && (
+            <CCardBody>
+              <CSVLink
+                filename={`reports-${formattedDate}.csv`}
+                style={{
+                  backgroundColor: '#35B7F6',
+                  color: 'white',
+                  padding: '10px 20px',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  textDecoration: 'none',
+                }}
+                data={data}
+                headers={headers}
+              >
+                Download me
+              </CSVLink>
+            </CCardBody>
+          )}
           <CCardBody>
             <div className="py-4">
               <CFormInput
@@ -314,27 +335,6 @@ const Dashboard = () => {
           </div>
 
           {/*  */}
-          {data?.length > 0 && (
-            <CCardBody>
-              <CSVLink
-                filename={`reports-${formattedDate}.csv`}
-                style={{
-                  backgroundColor: '#35B7F6',
-                  color: 'white',
-                  padding: '10px 20px',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  fontSize: '16px',
-                  textDecoration: 'none',
-                }}
-                data={data}
-                headers={headers}
-              >
-                Download me
-              </CSVLink>
-            </CCardBody>
-          )}
         </CCol>
       )}
     </CRow>

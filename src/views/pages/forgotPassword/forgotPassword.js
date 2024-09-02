@@ -170,8 +170,8 @@ const ForgotPassword = () => {
                         </CRow>
                       </>
                     )}
-                    <CRow className="item-center">
-                      <CCol xs={6}>
+                    <CRow className="justify-content-between">
+                      <CCol sm={6} className="text-start">
                         <CButton
                           color="primary"
                           className="px-4"
@@ -190,6 +190,18 @@ const ForgotPassword = () => {
                             'Confirm Password'
                           )}
                         </CButton>
+                      </CCol>
+                      <CCol sm={6} className="text-end">
+                        {!isOtp && (
+                          <CButton
+                            color="primary"
+                            onClick={() => {
+                              navigate('/login')
+                            }}
+                          >
+                            Back
+                          </CButton>
+                        )}
                       </CCol>
                     </CRow>
                   </CForm>
