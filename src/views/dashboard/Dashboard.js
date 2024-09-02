@@ -160,7 +160,7 @@ const Dashboard = () => {
                       </CTableDataCell>
                       <CTableDataCell>
                         <div className="d-flex justify-content-between text-nowrap">
-                          <div>{item?.reportedId.reportCount}</div>
+                          <div>{item?.reportedId?.reportCount}</div>
                         </div>
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
@@ -180,7 +180,7 @@ const Dashboard = () => {
                         </div>
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
-                        {item.reportType === 'POST' ? (
+                        {item?.reportType === 'POST' ? (
                           <div className="d-flex justify-content-between text-nowrap">
                             <a
                               href={item?.postId?.media?.url}
