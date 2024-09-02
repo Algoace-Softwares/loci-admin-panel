@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { CSpinner, useColorModes } from '@coreui/react'
+import { useColorModes } from '@coreui/react'
 import './scss/style.scss'
 import MainRoutes from './layout/MainRoutes'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import aws_config from './aws-exports'
+import { Amplify } from 'aws-amplify'
 
 const App = () => {
+  Amplify.configure(aws_config)
   const { setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
   const isAdminLogin = localStorage.getItem('isAdminLogin')
   console.log('isAdminLogin', isAdminLogin)
@@ -14,7 +17,6 @@ const App = () => {
   useEffect(() => {
     setColorMode('light')
   }, [setColorMode])
-
   return (
     <Router>
       <ToastContainer
