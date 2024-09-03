@@ -246,6 +246,13 @@ const Dashboard = () => {
                               >
                                 Ban
                               </CDropdownItem>
+                              <CDropdownItem
+                                onClick={() => {
+                                  onActionPerformed('UNBANNED', item)
+                                }}
+                              >
+                                UnBan
+                              </CDropdownItem>
                             </CDropdownMenu>
                           </CDropdown>
                         </div>
