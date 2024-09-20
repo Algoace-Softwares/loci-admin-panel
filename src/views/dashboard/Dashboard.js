@@ -149,7 +149,7 @@ const Dashboard = () => {
                 data={data}
                 headers={headers}
               >
-                Download me
+                Download
               </CSVLink>
             </CCardBody>
           )}
@@ -177,11 +177,11 @@ const Dashboard = () => {
                   {data.map((item, index) => (
                     <CTableRow key={index}>
                       <CTableDataCell>
-                        <div>{item?.reportedId?.name}</div>
+                        <div>{item?.reportedId?.name ?? 'Loci_user'}</div>
                       </CTableDataCell>
                       <CTableDataCell>
                         <div className="d-flex justify-content-between text-nowrap">
-                          <div>{item?.reportedId?.reportCount}</div>
+                          <div>{item?.reportedId?.reportCount ?? 0}</div>
                         </div>
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
