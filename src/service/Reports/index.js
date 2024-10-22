@@ -10,7 +10,7 @@ export const getAllReports = async (currentPage, search) => {
     console.log('response', response)
     return response
   } catch (error) {
-    console.log('error:service:reports1:', error)
+    console.log('error:service:reports1', error)
     toast.error(error)
   }
 }
