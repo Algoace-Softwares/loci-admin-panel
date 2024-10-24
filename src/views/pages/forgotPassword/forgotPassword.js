@@ -45,6 +45,9 @@ const ForgotPassword = () => {
       setIsOTP(true)
     } catch (error) {
       console.log('error reset password', error)
+      if (error.message === 'Username/client id combination not found.')
+        return toast.error('User not exist')
+      
       toast.error(error.message || 'An error occurred while resetting password.')
     } finally {
       setLoading(false)
@@ -77,11 +80,15 @@ const ForgotPassword = () => {
       navigate('/login')
     } catch (error) {
       console.log('error confirm reset password', error)
+      
       toast.error(error.message || 'An error occurred while confirming the password.')
     } finally {
       setLoading(false)
     }
   }
+  
+const numberRegex = /^[0-9]*$/;
+
 
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
@@ -119,9 +126,15 @@ const ForgotPassword = () => {
                           </CInputGroupText>
                           <CFormInput
                             placeholder="OTP"
-                            type="text"
+                            type="text" // Use "text" to apply regex validation
                             value={otp}
-                            onChange={(e) => setOTP(e.target.value)}
+                            onChange={(e) => {
+                              if (!numberRegex.test(e.target.value)) { 
+                                toast.error('Please enter valid otp')
+                              } else {
+                                setOTP(e.target.value);
+                              }
+                            }}
                             required
                           />
                         </CInputGroup>

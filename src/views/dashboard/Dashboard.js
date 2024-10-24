@@ -322,19 +322,19 @@ const Dashboard = () => {
               color="primary"
               variant="outline"
               onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
+              disabled={ totalPages === 0 || currentPage === 1}
               className="me-2"
             >
               Previous
             </CButton>
             <span className="mx-3">
-              Page {currentPage} of {totalPages}
+              Page {totalPages === 0 ? 0 : currentPage} of {totalPages}
             </span>
             <CButton
               color="primary"
               variant="outline"
               onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
+              disabled={ totalPages === 0 || currentPage === totalPages}
               className="ms-2"
             >
               Next

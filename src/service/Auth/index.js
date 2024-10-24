@@ -5,28 +5,18 @@ import { toast } from 'react-toastify'
 
 export const login = async (email, password) => {
   try {
-    console.log('Attempting to sign in with email:', email)
     const res = await signIn({ username: email, password })
-    console.log('Sign-in response:', res)
 
-    console.log('Fetching current user')
     const currentUser = await getCurrentUser()
-    console.log('Current user:', currentUser)
 
-    console.log('Fetching authentication session')
     const attribute = await fetchAuthSession()
     const token = `Bearer ${attribute?.tokens?.accessToken}`
-    console.log('Authentication session:', token, attribute)
 
     const cognitoId = currentUser.userId
-    console.log('Cognito ID :', cognitoId)
 
     if (attribute?.tokens?.accessToken?.payload?.['cognito:groups']?.[0] !== 'Admin') {
-      console.log('User is not an Admin')
       toast.error('Not an Admin')
-      console.log('Signing out user')
       await signOut()
-      console.log('User signed out')
       return
     }
 
@@ -47,6 +37,12 @@ export const login = async (email, password) => {
     return { data: loginAPI.data, credentials: attribute }
   } catch (error) {
     console.log('error:45', error.message, error.code)
+    if(error.message === 'An unknown error has occurred.')
+      throw new Error('Please check your internet connection')
+    
+    if (error.message === 'Incorrect username or password.')
+      throw new Error('Incorrect email or password.')
+      
     throw new Error(error.message)
   }
 }

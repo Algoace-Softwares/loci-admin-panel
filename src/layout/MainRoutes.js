@@ -21,11 +21,16 @@ const MainRoutes = () => {
       }
     >
       <Routes>
-        <Route exact path="/register" name="Register Page" element={<Register />} />
-        <Route exact path="/login" name="Login Page" element={<Login />} />
         <Route
           exact
-          path="/forget-password"
+          path={'/register' || '/register/'}
+          name="Register Page"
+          element={<Register />}
+        />
+        <Route exact path={'/login' || '/login/'} name="Login Page" element={<Login />} />
+        <Route
+          exact
+          path={'/forget-password' || '/forget-password/'}
           name="Forgot Password Page"
           element={<ForgotPassword />}
         />

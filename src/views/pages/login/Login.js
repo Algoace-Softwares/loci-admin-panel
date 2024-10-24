@@ -31,24 +31,32 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
   console.log('first')
   isAuthenticated()
+// Function to handle login
+const handleLogin = async () => {
+  // Regex for validating an email
+  const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
 
-  // Function to handle login
-  const handleLogin = async () => {
-    try {
-      setLoading(true)
-      const response = await login(email, password)
-      const token = response.credentials?.credentials?.sessionToken
-      localStorage.setItem('token', token)
-      localStorage.setItem('isAdminLogin', true)
-      navigate('/reports')
-      toast.success('Login successful!') // Show success message
-    } catch (error) {
-      console.error('error:', error)
-      toast.error(error.message || 'An error occurred during login.') // Show error message
-    } finally {
-      setLoading(false)
-    }
+  if (!emailRegex.test(email)) {
+    toast.error('Please enter a valid email address.'); // Show error message
+    return; // Exit the function if email is invalid
   }
+
+  try {
+    setLoading(true);
+    const response = await login(email, password);
+    const token = response?.credentials?.credentials?.sessionToken;
+    localStorage.setItem('token', token);
+    localStorage.setItem('isAdminLogin', true);
+    navigate('/reports');
+    toast.success('Login successful!'); // Show success message
+  } catch (error) {
+    console.error('error:', error);
+    toast.error(error.message || 'An error occurred during login.'); // Show error message
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // Function to handle forgot password
   const handleForgotPassword = () => {
@@ -71,12 +79,14 @@ const Login = () => {
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput
+                     <CFormInput
+                        type='email'
                         placeholder="email"
                         autoComplete="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
+
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
