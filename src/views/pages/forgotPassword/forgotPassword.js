@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom'
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
-  const [isOtp, setIsOTP] = useState(false)
+  const [isOtp, setIsOTP] = useState(true)
   const [otp, setOTP] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -47,7 +47,7 @@ const ForgotPassword = () => {
       console.log('error reset password', error)
       if (error.message === 'Username/client id combination not found.')
         return toast.error('User not exist')
-      
+
       toast.error(error.message || 'An error occurred while resetting password.')
     } finally {
       setLoading(false)
@@ -68,6 +68,15 @@ const ForgotPassword = () => {
   }
 
   const forgotPasswordConfirm = async () => {
+    // Password validation regex
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,50}$/
+
+    if (!passwordRegex.test(password)) {
+      toast.error(
+        'Password must be 8-50 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.',
+      )
+      return
+    }
     try {
       setLoading(true)
       console.log('confirm forgot password')
@@ -80,15 +89,14 @@ const ForgotPassword = () => {
       navigate('/login')
     } catch (error) {
       console.log('error confirm reset password', error)
-      
+
       toast.error(error.message || 'An error occurred while confirming the password.')
     } finally {
       setLoading(false)
     }
   }
-  
-const numberRegex = /^[0-9]*$/;
 
+  const numberRegex = /^[0-9]*$/
 
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
@@ -129,10 +137,10 @@ const numberRegex = /^[0-9]*$/;
                             type="text" // Use "text" to apply regex validation
                             value={otp}
                             onChange={(e) => {
-                              if (!numberRegex.test(e.target.value)) { 
+                              if (!numberRegex.test(e.target.value)) {
                                 toast.error('Please enter valid otp')
                               } else {
-                                setOTP(e.target.value);
+                                setOTP(e.target.value)
                               }
                             }}
                             required

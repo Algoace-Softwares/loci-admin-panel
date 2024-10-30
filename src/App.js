@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import aws_config from './aws-exports'
 import { Amplify } from 'aws-amplify'
+import { NoInternetWrapper } from './components/NoInternet'
 
 const App = () => {
   Amplify.configure(aws_config)
@@ -31,7 +32,7 @@ const App = () => {
         pauseOnHover
       />
       <React.Fragment>
-        <MainRoutes />
+        <NoInternetWrapper />
       </React.Fragment>
     </Router>
   )

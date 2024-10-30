@@ -226,6 +226,9 @@ const Dashboard = () => {
                             </CDropdownToggle>
                             <CDropdownMenu>
                               <CDropdownItem
+                                style={{
+                                  cursor: 'pointer',
+                                }}
                                 onClick={() => {
                                   onActionPerformed('REMOVE', item)
                                 }}
@@ -233,6 +236,9 @@ const Dashboard = () => {
                                 Remove
                               </CDropdownItem>
                               <CDropdownItem
+                                style={{
+                                  cursor: 'pointer',
+                                }}
                                 onClick={() => {
                                   onActionPerformed('WARN', item)
                                 }}
@@ -240,6 +246,9 @@ const Dashboard = () => {
                                 Warn
                               </CDropdownItem>
                               <CDropdownItem
+                                style={{
+                                  cursor: 'pointer',
+                                }}
                                 onClick={() => {
                                   onActionPerformed('BANNED', item)
                                 }}
@@ -247,6 +256,9 @@ const Dashboard = () => {
                                 Ban
                               </CDropdownItem>
                               <CDropdownItem
+                                style={{
+                                  cursor: 'pointer',
+                                }}
                                 onClick={() => {
                                   onActionPerformed('UNBANNED', item)
                                 }}
@@ -322,7 +334,7 @@ const Dashboard = () => {
               color="primary"
               variant="outline"
               onClick={() => handlePageChange(currentPage - 1)}
-              disabled={ totalPages === 0 || currentPage === 1}
+              disabled={totalPages === 0 || currentPage === 1}
               className="me-2"
             >
               Previous
@@ -334,7 +346,7 @@ const Dashboard = () => {
               color="primary"
               variant="outline"
               onClick={() => handlePageChange(currentPage + 1)}
-              disabled={ totalPages === 0 || currentPage === totalPages}
+              disabled={totalPages === 0 || currentPage === totalPages}
               className="ms-2"
             >
               Next

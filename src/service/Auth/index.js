@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 export const login = async (email, password) => {
   try {
     const res = await signIn({ username: email, password })
-
+    console.log('res', res)
     const currentUser = await getCurrentUser()
 
     const attribute = await fetchAuthSession()
@@ -37,12 +37,14 @@ export const login = async (email, password) => {
     return { data: loginAPI.data, credentials: attribute }
   } catch (error) {
     console.log('error:45', error.message, error.code)
-    if(error.message === 'An unknown error has occurred.')
+    if (error.message === 'An unknown error has occurred.')
       throw new Error('Please check your internet connection')
-    
+
     if (error.message === 'Incorrect username or password.')
       throw new Error('Incorrect email or password.')
-      
+
+    if (error.message === 'User does not exist.') throw new Error('Invalid email or password.')
+
     throw new Error(error.message)
   }
 }
