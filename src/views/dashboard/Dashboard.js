@@ -44,7 +44,7 @@ const Dashboard = () => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  console.log('Pagination state')
+  console.debug('Pagination state')
   useEffect(() => {
     // Define an async function to fetch data
     const fetchData = async () => {
@@ -61,7 +61,7 @@ const Dashboard = () => {
         // response.data.data.limit
         // please work on pagination which comes on page and limit variables from API pagination through button
 
-        console.log('result123', result)
+        console.debug('result123', result)
         setData(result) // Update the state with the fetched data
         setTotalPages(pageInfo.totalPages)
       } catch (error) {
@@ -74,7 +74,7 @@ const Dashboard = () => {
 
     fetchData() // Call the async function
   }, [currentPage, searchText])
-  console.log('data11', rowId)
+  console.debug('data11', rowId)
 
   const date = new Date()
   const formattedDate = date.toLocaleDateString()
@@ -94,10 +94,10 @@ const Dashboard = () => {
     try {
       setOnSaveLoading(true)
       const res = await updateReportById(rowId, feedback, action)
-      console.log('res', res)
+      console.debug('res', res)
       setVisible(false)
     } catch (error) {
-      console.log('error at 85', error)
+      console.debug('error at 85', error)
       toast.error(error)
     } finally {
       setOnSaveLoading(false)
@@ -111,7 +111,7 @@ const Dashboard = () => {
   const debouncedSearch = useCallback(
     debounce((query) => {
       setSearchText(query)
-      console.log('Searching for:', query)
+      console.debug('Searching for:', query)
     }, 500),
     [],
   )

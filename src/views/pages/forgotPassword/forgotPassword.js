@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom'
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
-  const [isOtp, setIsOTP] = useState(true)
+  const [isOtp, setIsOTP] = useState(false)
   const [otp, setOTP] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -44,7 +44,7 @@ const ForgotPassword = () => {
       await resetPassword({ username: email })
       setIsOTP(true)
     } catch (error) {
-      console.log('error reset password', error)
+      console.debug('error reset password', error)
       if (error.message === 'Username/client id combination not found.')
         return toast.error('User not exist')
 
@@ -79,7 +79,7 @@ const ForgotPassword = () => {
     }
     try {
       setLoading(true)
-      console.log('confirm forgot password')
+      console.debug('confirm forgot password')
       await confirmResetPassword({
         username: email,
         confirmationCode: otp,
@@ -88,7 +88,7 @@ const ForgotPassword = () => {
       toast.success('Successfully changed password.')
       navigate('/login')
     } catch (error) {
-      console.log('error confirm reset password', error)
+      console.debug('error confirm reset password', error)
 
       toast.error(error.message || 'An error occurred while confirming the password.')
     } finally {

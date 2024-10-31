@@ -11,7 +11,7 @@ const ThemeView = () => {
 
   useEffect(() => {
     const el = ref.current.parentNode.firstChild
-    console.log('🚀 ~ useEffect ~ el:', el)
+    console.debug('🚀 ~ useEffect ~ el:', el)
     const varColor = window.getComputedStyle(el).getPropertyValue('background-color')
     setColor(varColor)
   }, [ref])

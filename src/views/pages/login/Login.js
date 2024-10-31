@@ -29,7 +29,6 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  console.log('first')
   isAuthenticated()
   // Function to handle login
   const handleLogin = async () => {
@@ -59,8 +58,6 @@ const Login = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault() // Prevent default form submission behavior
-      // Call your submit function here
       handleLogin()
     }
   }
@@ -68,7 +65,6 @@ const Login = () => {
   // Function to handle forgot password
   const handleForgotPassword = () => {
     navigate('/forget-password')
-    console.log('Forgot password clicked')
   }
 
   return (
@@ -94,11 +90,7 @@ const Login = () => {
                         // onChange={(e) => setEmail(e.target.value)}
                         onChange={(e) => {
                           const input = e.target.value
-
-                          // Regex pattern to allow valid email characters (during typing)
                           const regex = /^[a-zA-Z0-9._%+-]*$/
-
-                          // Check if the input matches valid characters or is empty
                           if (regex.test(input) || input === '' || input.includes('@')) {
                             setEmail(input)
                           }

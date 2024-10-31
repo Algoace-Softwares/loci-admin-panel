@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { useColorModes } from '@coreui/react'
 import './scss/style.scss'
@@ -12,8 +12,9 @@ import { NoInternetWrapper } from './components/NoInternet'
 const App = () => {
   Amplify.configure(aws_config)
   const { setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
-  const isAdminLogin = localStorage.getItem('isAdminLogin')
-  console.log('isAdminLogin', isAdminLogin)
+  useLayoutEffect(() => {
+    console.debug = function () {}
+  }, [])
 
   useEffect(() => {
     setColorMode('light')

@@ -7,10 +7,10 @@ export const getAllReports = async (currentPage, search) => {
     const response = await axios.get(
       `${API_URL}/report/all?page=${currentPage}&limit=50&reason=${search}`,
     )
-    console.log('response', response)
+    console.debug('response', response)
     return response
   } catch (error) {
-    console.log('error:service:reports1', error)
+    console.debug('error:service:reports1', error)
     toast.error(error)
   }
 }
@@ -20,7 +20,7 @@ export const getReportsById = async (id) => {
     const response = await axios.get(`${API_URL}/reports/${id}`)
     return response
   } catch (error) {
-    console.log('error:service:reports:', error)
+    console.debug('error:service:reports:', error)
     toast.error(error)
   }
 }
@@ -34,7 +34,7 @@ export const updateReportById = async (id, adminFeedback, action) => {
     })
     return response
   } catch (error) {
-    console.log('error:service:reports:', error)
+    console.debug('error:service:reports:', error)
     toast.error(error)
   }
 }

@@ -6,14 +6,14 @@ const isAuthenticated = () => {
   const location = useLocation()
   const isAdminLogin = localStorage.getItem('isAdminLogin')
   useEffect(() => {
-    console.log('AppContent', location)
+    console.debug('AppContent', location)
     if (!isAdminLogin && location.pathname === '/login') {
-      console.log('AppContent1')
+      console.debug('AppContent1')
       navigate('/login')
     } else if (!isAdminLogin && location.pathname === '/forget-password') {
       navigate('/forget-password')
     } else if (isAdminLogin) {
-      console.log('AppContent2')
+      console.debug('AppContent2')
       navigate('/reports')
     } else {
       navigate('/login')

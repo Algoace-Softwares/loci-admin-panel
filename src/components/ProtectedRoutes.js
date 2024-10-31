@@ -5,7 +5,7 @@ import { Navigate, Route } from 'react-router-dom'
 
 // const ProtectedRoute = ({ element }) => {
 //   const isAdminLogin = localStorage.getItem('isAdminLogin')
-//   console.log('isAdminLogin11', isAdminLogin ? 'j' : 'q')
+//   console.debug('isAdminLogin11', isAdminLogin ? 'j' : 'q')
 //   return isAdminLogin ? <Navigate to="/reports" /> : element
 // }
 
