@@ -119,7 +119,17 @@ const ForgotPassword = () => {
                             type="email"
                             placeholder="Email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                              const input = e.target.value
+
+                              // Regex pattern to allow valid email characters (during typing)
+                              const regex = /^[a-zA-Z0-9._%+-]*$/
+
+                              // Check if the input matches valid characters or is empty
+                              if (regex.test(input) || input === '' || input.includes('@')) {
+                                setEmail(input)
+                              }
+                            }}
                             required
                           />
                         </CInputGroup>

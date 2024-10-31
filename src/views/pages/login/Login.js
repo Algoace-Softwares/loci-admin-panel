@@ -57,6 +57,14 @@ const Login = () => {
     }
   }
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault() // Prevent default form submission behavior
+      // Call your submit function here
+      handleLogin()
+    }
+  }
+
   // Function to handle forgot password
   const handleForgotPassword = () => {
     navigate('/forget-password')
@@ -83,7 +91,19 @@ const Login = () => {
                         placeholder="Enter your email"
                         autoComplete="email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        // onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                          const input = e.target.value
+
+                          // Regex pattern to allow valid email characters (during typing)
+                          const regex = /^[a-zA-Z0-9._%+-]*$/
+
+                          // Check if the input matches valid characters or is empty
+                          if (regex.test(input) || input === '' || input.includes('@')) {
+                            setEmail(input)
+                          }
+                        }}
+                        onKeyDown={!loading && email && password && handleKeyDown}
                       />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
@@ -96,6 +116,7 @@ const Login = () => {
                         autoComplete="current-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={!loading && email && password && handleKeyDown}
                       />
                     </CInputGroup>
                     <CRow className="item-center">
