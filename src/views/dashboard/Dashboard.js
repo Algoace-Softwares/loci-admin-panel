@@ -50,6 +50,7 @@ const Dashboard = () => {
   const [activitySearchText, setActivitySearchText] = useState('')
   const [activitySearchResults, setActivitySearchResults] = useState([])
   const [activitySearchLoading, setActivitySearchLoading] = useState(false)
+  // const [activitySearchLoading, setActivitySearchLoading] = useState(false)
 
   // Derived analytical metrics
   const [engagementRate, setEngagementRate] = useState(null)
