@@ -23,7 +23,6 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CTooltip,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilOptions } from '@coreui/icons'
@@ -127,6 +126,7 @@ const Reports = () => {
     navigate(`/reports/${creatorId}`, {
       state: {
         creator: item?.reportedId,
+        reportItem: item,
       },
     })
   }
@@ -193,11 +193,8 @@ const Reports = () => {
                     onChange={(e) => setStatusFilter(e.target.value)}
                   >
                     <option value="all">All</option>
+                    <option value="pending">Pending</option>
                     <option value="resolved">Resolved</option>
-                    <option value="warn">Warn</option>
-                    <option value="remove">Remove</option>
-                    <option value="banned">Banned</option>
-                    <option value="unbanned">Unbanned</option>
                   </select>
                 </CCol>
                 <CCol md={4}>
@@ -260,15 +257,13 @@ const Reports = () => {
                         </div>
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
-                        <CTooltip content={(item?.reasons ?? []).join(', ')}>
-                          <div className="d-flex justify-content-between text-nowrap">
-                            <div>
-                              {(item?.reasons ?? []).join(', ').length > 30
-                                ? (item?.reasons ?? []).join(', ').slice(0, 30) + '...'
-                                : (item?.reasons ?? []).join(', ')}
-                            </div>
+                        <div className="d-flex justify-content-between text-nowrap">
+                          <div>
+                            {(item?.reasons ?? []).join(', ').length > 30
+                              ? (item?.reasons ?? []).join(', ').slice(0, 30) + '...'
+                              : (item?.reasons ?? []).join(', ')}
                           </div>
-                        </CTooltip>
+                        </div>
                       </CTableDataCell>
                       <CTableDataCell>
                         <div className="d-flex justify-content-between text-nowrap">
