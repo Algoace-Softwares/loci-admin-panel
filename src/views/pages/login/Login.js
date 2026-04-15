@@ -43,10 +43,10 @@ const Login = () => {
     try {
       setLoading(true)
       const response = await login(email, password)
-      const token = response?.credentials?.credentials?.sessionToken
+      const token = `Bearer ${response?.credentials?.tokens?.accessToken}`
       localStorage.setItem('token', token)
       localStorage.setItem('isAdminLogin', true)
-      navigate('/reports')
+      navigate('/dashboard')
       toast.success('Login successful!') // Show success message
     } catch (error) {
       console.error('error:', error)

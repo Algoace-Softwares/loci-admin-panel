@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import routes from '../routes'
 import {
   CContainer,
   CDropdown,
@@ -34,6 +35,18 @@ const AppHeader = () => {
 
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
+  const location = useLocation()
+
+  const getPageName = () => {
+    const match = routes.find((route) => {
+      if (route.path.includes(':')) {
+        const base = route.path.split('/:')[0]
+        return location.pathname.startsWith(base)
+      }
+      return route.path === location.pathname
+    })
+    return match ? match.name : ''
+  }
 
   useEffect(() => {
     document.addEventListener('scroll', () => {
@@ -53,8 +66,8 @@ const AppHeader = () => {
         </CHeaderToggler>
         <CHeaderNav className="d-none d-md-flex">
           <CNavItem>
-            <CNavLink to="/reports" as={NavLink}>
-              Reports
+            <CNavLink to={location.pathname} as={NavLink}>
+              {getPageName()}
             </CNavLink>
           </CNavItem>
         </CHeaderNav>

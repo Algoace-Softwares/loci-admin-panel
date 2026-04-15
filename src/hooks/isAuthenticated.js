@@ -6,18 +6,17 @@ const isAuthenticated = () => {
   const location = useLocation()
   const isAdminLogin = localStorage.getItem('isAdminLogin')
   useEffect(() => {
-    console.debug('AppContent', location)
-    if (!isAdminLogin && location.pathname === '/login') {
-      console.debug('AppContent1')
-      navigate('/login')
-    } else if (!isAdminLogin && location.pathname === '/forget-password') {
-      navigate('/forget-password')
-    } else if (isAdminLogin) {
-      console.debug('AppContent2')
+    const publicPaths = ['/login', '/forget-password', '/register']
+    const isPublic = publicPaths.includes(location.pathname)
+
+    if (isAdminLogin && isPublic) {
+      // Logged in but on a public page — send to reports
       navigate('/reports')
-    } else {
+    } else if (!isAdminLogin && !isPublic) {
+      // Not logged in and trying to access a protected page — send to login
       navigate('/login')
     }
+    // Otherwise stay on the current page
   }, [])
 }
 

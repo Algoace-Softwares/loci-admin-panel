@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 export const getAllReports = async (currentPage, search) => {
   try {
     const response = await axios.get(
-      `${API_URL}/report/all?page=${currentPage}&limit=50&reason=${search}`,
+      `${API_URL}/report/all?page=${currentPage}&limit=15&reason=${search}`,
     )
     console.debug('response', response)
     return response
