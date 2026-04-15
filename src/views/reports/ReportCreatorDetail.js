@@ -19,6 +19,7 @@ const ReportCreatorDetail = () => {
   const location = useLocation()
   const creator = location.state?.creator
   const reportItem = location.state?.reportItem
+  const lastAction = location.state?.lastAction ?? reportItem?.lastAction ?? reportItem?.action ?? null
 
   const creatorName = creator?.name ?? reportItem?.reportedId?.name ?? 'Creator'
   const reportCount = creator?.reportCount ?? reportItem?.reportedId?.reportCount ?? '—'
@@ -56,6 +57,16 @@ const ReportCreatorDetail = () => {
                   {reportItem?.ticketStatus?.toLowerCase?.() ?? '—'}
                 </div>
               </CCol>
+              {lastAction && (
+                <CCol md={4}>
+                  <div className="text-muted small">Action Applied</div>
+                  <div>
+                    <span className="badge bg-warning text-dark" style={{ fontSize: 14 }}>
+                      {lastAction.toLowerCase()}
+                    </span>
+                  </div>
+                </CCol>
+              )}
             </CRow>
 
             <CCard className="mb-0">

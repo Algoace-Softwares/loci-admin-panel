@@ -30,6 +30,22 @@ import { getAllReports, updateReportById } from '../../service/Reports'
 import { toast } from 'react-toastify'
 import { debounce } from 'lodash'
 
+const ACTIONS_KEY = 'reportActions'
+
+const getStoredActions = () => {
+  try {
+    return JSON.parse(localStorage.getItem(ACTIONS_KEY) || '{}')
+  } catch {
+    return {}
+  }
+}
+
+const storeAction = (id, action) => {
+  const stored = getStoredActions()
+  stored[id] = action
+  localStorage.setItem(ACTIONS_KEY, JSON.stringify(stored))
+}
+
 const Reports = () => {
   const navigate = useNavigate()
   const [searchText, setSearchText] = useState('')
@@ -47,6 +63,7 @@ const Reports = () => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [storedActions, setStoredActions] = useState(getStoredActions)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,6 +74,7 @@ const Reports = () => {
           return
         }
         const result = response?.data?.data?.items ?? []
+        console.debug('first report item:', result[0])
         const pageInfo = response?.data?.data ?? {}
 
         setData(result)
@@ -93,8 +111,28 @@ const Reports = () => {
         toast.error(res?.data?.message)
         return
       }
+      toast.success(`Action "${action.toLowerCase()}" applied successfully`)
       setVisible(false)
       setFeedBack('')
+      // persist badge in localStorage for warn/ban only
+      if (action === 'WARN' || action === 'BANNED') {
+        storeAction(rowId, action)
+        setStoredActions(getStoredActions())
+      } else if (action === 'UNBANNED') {
+        // clear the ban badge on unban
+        const stored = getStoredActions()
+        delete stored[rowId]
+        localStorage.setItem(ACTIONS_KEY, JSON.stringify(stored))
+        setStoredActions(getStoredActions())
+      }
+      // Update the row status locally so table reflects the change immediately
+      setData((prev) =>
+        prev.map((item) =>
+          item._id === rowId
+            ? { ...item, ticketStatus: 'RESOLVED', lastAction: action }
+            : item,
+        ),
+      )
     } catch (error) {
       toast.error(error?.message || 'Failed to update report')
     } finally {
@@ -127,6 +165,7 @@ const Reports = () => {
       state: {
         creator: item?.reportedId,
         reportItem: item,
+        lastAction: item?.lastAction ?? item?.action ?? storedActions[item._id] ?? null,
       },
     })
   }
@@ -268,6 +307,15 @@ const Reports = () => {
                       <CTableDataCell>
                         <div className="d-flex justify-content-between text-nowrap">
                           <div>{item?.ticketStatus?.toLowerCase?.() ?? ''}</div>
+                          {(() => {
+                            const appliedAction = item?.lastAction || item?.action || storedActions[item._id]
+                            if (!appliedAction || appliedAction === 'UNBANNED') return null
+                            return (
+                              <span className="ms-2 badge bg-warning text-dark">
+                                {appliedAction.toLowerCase()}
+                              </span>
+                            )
+                          })()}
                         </div>
                       </CTableDataCell>
 
@@ -284,15 +332,21 @@ const Reports = () => {
                               <CDropdownItem onClick={() => onActionPerformed('REMOVE', item)}>
                                 Remove
                               </CDropdownItem>
-                              <CDropdownItem onClick={() => onActionPerformed('WARN', item)}>
-                                Warn
-                              </CDropdownItem>
-                              <CDropdownItem onClick={() => onActionPerformed('BANNED', item)}>
-                                Ban
-                              </CDropdownItem>
-                              <CDropdownItem onClick={() => onActionPerformed('UNBANNED', item)}>
-                                UnBan
-                              </CDropdownItem>
+                              {storedActions[item._id] !== 'WARN' && item?.action !== 'WARN' && (
+                                <CDropdownItem onClick={() => onActionPerformed('WARN', item)}>
+                                  Warn
+                                </CDropdownItem>
+                              )}
+                              {storedActions[item._id] !== 'BANNED' && item?.action !== 'BANNED' && (
+                                <CDropdownItem onClick={() => onActionPerformed('BANNED', item)}>
+                                  Ban
+                                </CDropdownItem>
+                              )}
+                              {(storedActions[item._id] === 'BANNED' || item?.action === 'BANNED') && (
+                                <CDropdownItem onClick={() => onActionPerformed('UNBANNED', item)}>
+                                  UnBan
+                                </CDropdownItem>
+                              )}
                             </CDropdownMenu>
                           </CDropdown>
                         </div>
