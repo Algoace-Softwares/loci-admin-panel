@@ -9,12 +9,12 @@
       "UnauthRoleName": "amplify-loci-dev-f0a13-unauthRole",
       "StackName": "amplify-loci-dev-f0a13",
       "StackId": "arn:aws:cloudformation:us-east-1:381492121234:stack/amplify-loci-dev-f0a13/d225eb30-5497-11ef-95a6-0e14a0af9ba1",
-      "AmplifyAppId": "d2uv2g55g1dmev"
+      "AmplifyAppId": "d17jyr0rwy2uuk"
     },
     "categories": {
       "hosting": {
         "amplifyhosting": {
-          "appId": "d2uv2g55g1dmev",
+          "appId": "d17jyr0rwy2uuk",
           "type": "manual"
         }
       },
