@@ -95,7 +95,7 @@ const Login = () => {
                             setEmail(input)
                           }
                         }}
-                        onKeyDown={!loading && email && password && handleKeyDown}
+                        onKeyDown={!loading && email && password ? handleKeyDown : undefined}
                       />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
@@ -108,7 +108,7 @@ const Login = () => {
                         autoComplete="current-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        onKeyDown={!loading && email && password && handleKeyDown}
+                        onKeyDown={!loading && email && password ? handleKeyDown : undefined}
                       />
                     </CInputGroup>
                     <CRow className="item-center">
