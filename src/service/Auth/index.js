@@ -5,6 +5,8 @@ import { toast } from 'react-toastify'
 
 export const login = async (email, password) => {
   try {
+    // Clear any stale session before signing in
+    try { await signOut() } catch (_) {}
     const res = await signIn({ username: email, password })
     console.debug('res', res)
     const currentUser = await getCurrentUser()
