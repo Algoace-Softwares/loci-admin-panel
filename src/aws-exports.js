@@ -5,8 +5,8 @@ const awsmobile = {
   aws_project_region: 'us-east-1',
   aws_cognito_identity_pool_id: 'us-east-1:87743151-5123-4949-b4be-dac99112c2c0',
   aws_cognito_region: 'us-east-1',
-  aws_user_pools_id: 'us-east-1_xkg9tK19V',
-  aws_user_pools_web_client_id: '2t2p949cr3h1mfgju93nt552pv',
+  aws_user_pools_id: 'us-east-1_VOkhIZRAu',
+  aws_user_pools_web_client_id: '2eva3lkhfppph5umjoke1ci3oh',
   oauth: {
     domain: 'locie714a394-e714a394-dev.auth.us-east-1.amazoncognito.com',
     scope: ['phone', 'email', 'openid', 'profile', 'aws.cognito.signin.user.admin'],
